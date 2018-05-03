@@ -51,7 +51,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'TGKI_SPEC'
+project = u'TOPPERS 第 3 世代カーネル勉強資料'
 copyright = u'2018, mikoto2000'
 author = u'mikoto2000'
 
@@ -122,7 +122,7 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'haiku'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -136,7 +136,7 @@ html_theme = 'alabaster'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'TGKI_SPEC v0.0.1'
+html_title = u'TOPPERS 第 3 世代カーネル勉強資料'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
