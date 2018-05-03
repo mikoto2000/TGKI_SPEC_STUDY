@@ -1,0 +1,9 @@
+version: '3'
+services:
+    sphinx:
+        build: .
+        image: mikoto2000/sphinx
+        volumes:
+            - ./work:/work
+        working_dir: /work
+
