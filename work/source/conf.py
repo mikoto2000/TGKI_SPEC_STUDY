@@ -344,6 +344,7 @@ texinfo_documents = [
 html_enable_livereload = '0'
 
 def setup(app):
+    app.add_stylesheet('custom.css');
     app.add_config_value('html_enable_livereload', html_enable_livereload, '')
     app.connect('env-purge-doc', purge_livereload)
 
