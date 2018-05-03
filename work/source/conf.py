@@ -339,3 +339,17 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
+
+# livereload を使うための設定
+html_enable_livereload = '0'
+
+def setup(app):
+    app.add_config_value('html_enable_livereload', html_enable_livereload, '')
+    app.connect('env-purge-doc', purge_livereload)
+
+def purge_livereload(app, env, docname):
+    if not hasattr(app.config, 'html_enable_livereload'):
+        return
+    if app.config.html_enable_livereload == '1':
+        app.add_javascript('http://localhost:35730/livereload.js');
+
