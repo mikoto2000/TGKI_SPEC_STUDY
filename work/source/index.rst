@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    abstract/index.rst
+   appendix/index.rst
 
 
 Indices and tables
