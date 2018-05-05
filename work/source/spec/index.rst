@@ -9,3 +9,4 @@
    api.rst
    concept.rst
    process_unit_type_and_run.rst
+   system_status_and_context.rst
