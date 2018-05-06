@@ -10,3 +10,5 @@
    concept.rst
    process_unit_type_and_run.rst
    system_status_and_context.rst
+   state_transition_and_scheduling.rst
+   task_queue_push_and_pop.rst
