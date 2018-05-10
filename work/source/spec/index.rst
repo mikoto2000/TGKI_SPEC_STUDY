@@ -13,4 +13,5 @@
    state_transition_and_scheduling.rst
    task_queue_push_and_pop.rst
    running_task_suspended_in_pend_dispatching.rst
+   restricted_task.rst
 
