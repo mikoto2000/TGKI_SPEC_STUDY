@@ -15,4 +15,5 @@
    running_task_suspended_in_pend_dispatching.rst
    restricted_task.rst
    time_partitioning_and_scheduling.rst
+   interrupt.rst
 
