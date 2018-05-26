@@ -6,6 +6,13 @@
 TOPPERS 第 3 世代カーネル勉強資料
 =================================
 
+この資料は、TOPPERS 第 3 世代カーネル勉強資料です。
+
+TOPPERS 第 3 世代カーネル統合仕様書をもとに、主に ASP3 についてのものを、何となくでまとめなおしました。
+
+- `[TOPPERSプロジェクト／ドキュメント <https://www.toppers.jp/documents.html#tgki_spec>`_
+- `TOPPERSプロジェクト／ASP3 <https://www.toppers.jp/asp3-kernel.html>`_
+
 Contents:
 
 .. toctree::
