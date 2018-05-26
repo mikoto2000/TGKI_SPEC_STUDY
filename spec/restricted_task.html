@@ -1,0 +1,72 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>制約タスク(restricted task) &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="時間パーティショニング使用時のスケジューリング規則" href="time_partitioning_and_scheduling.html" />
+    <link rel="prev" title="ディスパッチ保留状態で実行中のタスクに対する強制待ち" href="running_task_suspended_in_pend_dispatching.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>制約タスク(restricted task)</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="running_task_suspended_in_pend_dispatching.html">ディスパッチ保留状態で実行中のタスクに対する強制待ち</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="time_partitioning_and_scheduling.html">時間パーティショニング使用時のスケジューリング規則</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="restricted-task">
+<h1>制約タスク(restricted task)<a class="headerlink" href="#restricted-task" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>タスクに対しいくつかの制限事項を付けることで、メモリ使用量を削減したもの。(スタック領域の共有ができる)</p>
+<p>制約タスクには以下の制限がある。</p>
+<ul class="simple">
+<li>広義の待ち状態に入ることができない</li>
+<li>サービスコールによるベース優先度変更が不可</li>
+<li>対称優先度内の先頭タスクである場合に、タスクの優先順位の回転(rot_rdq)ができない</li>
+<li>マルチプロセッサ対応カーネルでは、割り付けプロセッサ変更ができない</li>
+</ul>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="running_task_suspended_in_pend_dispatching.html">ディスパッチ保留状態で実行中のタスクに対する強制待ち</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="time_partitioning_and_scheduling.html">時間パーティショニング使用時のスケジューリング規則</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

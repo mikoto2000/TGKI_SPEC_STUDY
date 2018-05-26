@@ -1,0 +1,193 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>処理単位の種類と実行 &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="システム状態とコンテキスト" href="system_status_and_context.html" />
+    <link rel="prev" title="主な概念" href="concept.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>処理単位の種類と実行</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="concept.html">主な概念</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="system_status_and_context.html">システム状態とコンテキスト</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="id1">
+<h1>処理単位の種類と実行<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id2">
+<h2>処理単位の種類<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>処理単位の種類は次の通り。</p>
+<ul class="simple">
+<li>タスク</li>
+<li><dl class="first docutils">
+<dt>割り込みハンドラ</dt>
+<dd><ul class="first last">
+<li>割り込みサービスルーチン</li>
+<li>タイムイベントハンドラ</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>CPU 例外ハンドラ</li>
+<li>拡張サービスコール</li>
+<li>初期化ルーチン</li>
+<li>終了処理ルーチン</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>処理単位の実行順序と優先順位<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">優先順位</th>
+<th class="head">処理単位</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>高い</td>
+<td>割込みハンドラ</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>ディスパッチャ, CPU 例外ハンドラ(タスクで発生した場合)</td>
+</tr>
+<tr class="row-even"><td>低い</td>
+<td>タスク</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>割込みハンドラ</dt>
+<dd><ul class="first last">
+<li>高い割込み優先度を持つほうが優先順位が高い</li>
+<li>同じ割込み優先度を持つタスクは先に実行できる状態になったほうが優先順位が高い</li>
+<li>同じ割込み優先度を持つタスクの実行開始順序については規定しない</li>
+<li>割込みサービスルーチンとタイムイベントハンドラは、それを呼び出す割込みハンドラと同じ優先順位</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>ディスパッチャ</li>
+<li><dl class="first docutils">
+<dt>タスク</dt>
+<dd><ul class="first last">
+<li>高い優先度を持つほうが先に実行される</li>
+<li><dl class="first docutils">
+<dt>同じ優先度を持つタスクは先に実行できる状態になったほうが実行される</dt>
+<dd><ul class="first last">
+<li>別規定がある場合(サブ優先度機能)はそれに従う</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>CPU 例外</dt>
+<dd><ul class="first last">
+<li>タスクで発生した場合は、ディスパッチャと同じ優先順位だが、ディスパッチャよりも先に実行される</li>
+<li>タスク以外の処理単位で発生した場合は、その処理単位と同じ優先順位だが、その処理単位よりも先に実行される</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>拡張サービスコール</dt>
+<dd><ul class="first last">
+<li>それを呼び出した処理単位と同じ優先順位だが、その処理単位よりも先に実行される</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>初期化ルーチン</dt>
+<dd><ul class="first last">
+<li>カーネルの動作開始前に実行される</li>
+<li>各初期化ルーチンは、システムコンフィギュレーションの記述順序と同じ順序で実行される</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>終了処理ルーチン</dt>
+<dd><ul class="first last">
+<li>カーネルの動作終了後に実行される</li>
+<li>各終了処理ルーチンは、システムコンフィギュレーションの記述順序と逆の順序で実行される</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">課題</p>
+<p class="last">マルチプロセッサ対応カーネルの初期化ルーチン・終了処理ルーチンの説明</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>カーネル処理の不可分性<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>アプリケーションがサービスコールを用いて観測できる範囲では、カーネル処理は不可分に実行された場合と同様にふるまう。</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">課題</p>
+<p class="last">マルチプロセッサ対応時のカーネル処理不可分性の説明</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>処理単位を実行するプロセッサ<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">課題</p>
+<p class="last">処理単位を実行するプロセッサの説明</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="concept.html">主な概念</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="system_status_and_context.html">システム状態とコンテキスト</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,547 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>システム状態とコンテキスト &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="タスクの状態遷移とスケジューリング規則" href="state_transition_and_scheduling.html" />
+    <link rel="prev" title="処理単位の種類と実行" href="process_unit_type_and_run.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>システム状態とコンテキスト</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="process_unit_type_and_run.html">処理単位の種類と実行</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="state_transition_and_scheduling.html">タスクの状態遷移とスケジューリング規則</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="id1">
+<h1>システム状態とコンテキスト<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id2">
+<h2>カーネル動作状態と非動作状態<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>カーネルの初期化完了後からカーネル終了処理開始までの間を「カーネル動作状態」と呼ぶ</li>
+<li>それ以外の状態を「カーネル非動作状態」と呼ぶ</li>
+<li>マルチプロセッサ対応カーネルでは、プロセッサごとに状態を持つ</li>
+</ul>
+<div class="section" id="id3">
+<h3>カーネル動作状態<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>各種カーネルの全機能を使える</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h3>カーネル非動作状態<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>NMI を除くすべての割り込みがマスクされる</li>
+<li><dl class="first docutils">
+<dt>呼び出せるサービスコールに制限がある</dt>
+<dd><ul class="first last">
+<li>システムインタフェースレイヤ API は呼び出せる</li>
+<li>カーネル非動作状態を参照するサービスコール(sns_ker) は呼び出せる</li>
+<li>上記以外のサービスコールを呼び出した場合の動作は保証されない。</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>タスクコンテキストと非タスクコンテキスト<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>処理単位が実行される環境をコンテキストと呼ぶ</dt>
+<dd><ul class="first last">
+<li>処理単位が使うスタック領域、プロセッサの動作モードなど</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="id6">
+<h3>タスクコンテキスト<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>タスクが実行されるコンテキスト。</p>
+<p>タスクコンテキストで実行される処理単位は、別に規定がない限りタスクのスタック領域を使う。</p>
+</div>
+<div class="section" id="id7">
+<h3>非タスクコンテキスト<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>割込みハンドラ(割込みサービスルーチン、タイムイベントハンドラを含む)、CPU 例外ハンドラが実行されるコンテキスト。</p>
+<p>非タスクコンテキストで実行される処理単位は、別に規定がない限り非タスクコンテキスト用のスタック領域を使う。</p>
+<p>タスクコンテキスト専用のサービスコールを呼び出せない。</p>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>カーネルの振る舞いに影響を与える状態<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>プロセッサの下記状態は、カーネルの振る舞いに影響を与える。</p>
+<ul class="simple">
+<li>全割り込みロックフラグ</li>
+<li>CPU ロックフラグ</li>
+<li>割込み優先度マスク</li>
+<li>ディスパッチ禁止フラグ</li>
+</ul>
+<p>これらの状態はそれぞれ独立に変化させることができる。</p>
+</div>
+<div class="section" id="id9">
+<h2>全割込みロック状態と全割込みロック解除状態<a class="headerlink" href="#id9" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>全割り込みロック状態 =&gt; 全割り込みロックフラグがセットされた状態</dt>
+<dd><ul class="first last">
+<li>NMI を除くすべての割り込みがマスクされる</li>
+<li><dl class="first docutils">
+<dt>以下のサービスコールのみ呼び出すことができる</dt>
+<dd><ul class="first last">
+<li>システムインターフェースレイヤ API</li>
+<li>カーネル非動作状態を参照するサービスコール(sns_ker)</li>
+<li>カーネルを終了するサービスコール(ext_ker)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>全割り込みロック状態で処理単位からリターンしてはならない</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>全割り込みロック解除状態 =&gt; 全割り込みロックフラグがクリアされた状態</li>
+<li>マルチプロセッサ対応カーネルでは、プロセッサごとに状態を持つ</li>
+</ul>
+</div>
+<div class="section" id="cpu-cpu">
+<h2>CPU ロック状態と CPU ロック解除状態<a class="headerlink" href="#cpu-cpu" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>CPU ロック状態 =&gt; CPU ロックフラグがセットされた状態</dt>
+<dd><ul class="first last">
+<li>すべてのカーネル管理の割り込みがマスクされる</li>
+<li>ディスパッチが保留される</li>
+<li><dl class="first docutils">
+<dt>以下のサービスコールのみ呼び出すことができる</dt>
+<dd><ul class="first last">
+<li>システムインターフェースレイヤ API</li>
+<li>loc_cpu，unl_cpu</li>
+<li>uni_spn <a class="footnote-reference" href="#fn1" id="id10">[1]</a></li>
+<li>dis_int, ena_int, clr_int, ras_int, prb_int</li>
+<li>sns_ter, sns_ctx, sns_loc, sns_dsp, sns_dpn, sns_ker</li>
+<li>xsns_dpn <a class="footnote-reference" href="#fn2" id="id11">[2]</a></li>
+<li>fch_hrt</li>
+<li>ext_tsk, ext_ker</li>
+<li>prb_mem <a class="footnote-reference" href="#fn3" id="id12">[3]</a></li>
+<li>cal_svc <a class="footnote-reference" href="#fn3" id="id13">[3]</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>CPU ロック解除状態 =&gt; CPU ロックフラグがクリアされた状態</li>
+<li>マルチプロセッサ対応カーネルでは、プロセッサごとに状態を持つ</li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h2>割り込み優先度マスク<a class="headerlink" href="#id14" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>割込み優先度マスクが全解除でない状態 =&gt; いずれかの割込み要求がマスクされている状態</dt>
+<dd><ul class="first last">
+<li>割り込み優先度マスクと同じかそれより低い割込み優先度を持つ割込みがマスクされる</li>
+<li>ディスパッチが保留される</li>
+<li>自タスクを広義の待ち状態に遷移させる可能性のあるサービスコールは呼び出せない</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>割込み優先度マスク全解除状態 =&gt; いずれの割込み要求もマスクされない状態</li>
+<li>マルチプロセッサ対応カーネルでは、プロセッサごとに状態を持つ</li>
+</ul>
+</div>
+<div class="section" id="id15">
+<h2>ディスパッチ禁止状態とディスパッチ許可状態<a class="headerlink" href="#id15" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>ディスパッチ禁止状態 =&gt; ディスパッチ禁止フラグがセットされた状態</dt>
+<dd><ul class="first last">
+<li>ディスパッチは保留される</li>
+<li>自タスクを広義の待ち状態に遷移させる可能性のあるサービスコールは呼び出せない</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>ディスパッチ許可状態 =&gt; ディスパッチ禁止フラグがクリアされた状態</li>
+<li>マルチプロセッサ対応カーネルでは、プロセッサごとに状態を持つ</li>
+</ul>
+</div>
+<div class="section" id="id16">
+<h2>ディスパッチ保留状態<a class="headerlink" href="#id16" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>以下の状態ではディスパッチが保留される。
+この状態のことを総称してディスパッチ保留状態と呼ぶ。</p>
+<ul class="simple">
+<li>非タスクコンテキストの実行中</li>
+<li>CPU ロック状態</li>
+<li>割込み優先度マスクが全解除でない状態</li>
+<li>ディスパッチ禁止状態</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p class="last">全割り込みロック状態は、カーネル管理外であり、ディスパッチが保留されることをカーネルが保証できないたため、ディスパッチ保留状態には含まれない。</p>
+</div>
+</div>
+<div class="section" id="id17">
+<h2>カーネル管理外の状態<a class="headerlink" href="#id17" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>以下の状態はカーネル管理外。
+この状態のことを総称してカーネル管理外の状態と呼ぶ。</p>
+<ul class="simple">
+<li>全割込みロック状態</li>
+<li>カーネル管理外の割込みハンドラ実行中</li>
+<li>カーネル管理外の CPU 例外ハンドラ実行中</li>
+</ul>
+<p>以下のサービスコールのみを呼び出すことができる。</p>
+<ul class="simple">
+<li>システムインターフェースレイヤ API</li>
+<li>sns_ker</li>
+<li>ext_ker</li>
+<li>xsns_dpn <a class="footnote-reference" href="#fn4" id="id18">[4]</a></li>
+</ul>
+<p>カーネル管理外の状態では、以下の状態で処理単位が実行される。</p>
+<ul class="simple">
+<li>カーネル管理の割込みはマスクされている</li>
+<li>カーネル管理外の割込みの一部がマスクされている場合がある</li>
+<li>保護機能対応カーネルでは、特権モードで実行される</li>
+</ul>
+</div>
+<div class="section" id="id19">
+<h2>処理単位の開始・終了とシステム状態<a class="headerlink" href="#id19" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>各タイミングでの処理状態を説明する。
+各表の項目名の意味は次の通り。</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>実行開始条件</dt>
+<dd><ul class="first last">
+<li>各処理単位が実行開始されるシステム状態の条件</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>実行開始時処理</dt>
+<dd><ul class="first last">
+<li>各処理単位の実行開始時にカーネルによって行われるシステム状態の変更処理</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>終了前・リターン前</dt>
+<dd><ul class="first last">
+<li>各処理単位からの終了前・リターン前にアプリケーションが設定しておくべきシステム状態</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>終了時処理・リターン時処理</dt>
+<dd><ul class="first last">
+<li>各処理単位からの終了時・リターン時にカーネルによって行われるシステム状態の変更処理</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="id20">
+<h3>タスク<a class="headerlink" href="#id20" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="19%" />
+<col width="22%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">CPU ロックフラグ</th>
+<th class="head">割込み優先度マスク</th>
+<th class="head">ディスパッチ禁止フラグ</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>実行開始条件</td>
+<td>解除</td>
+<td>全解除</td>
+<td>許可</td>
+</tr>
+<tr class="row-odd"><td>実行開始時処理</td>
+<td>そのまま</td>
+<td>そのまま</td>
+<td>そのまま</td>
+</tr>
+<tr class="row-even"><td>終了前</td>
+<td>原則解除 <a class="footnote-reference" href="#fn5" id="id21">[5]</a></td>
+<td>原則解除 <a class="footnote-reference" href="#fn5" id="id22">[5]</a></td>
+<td>原則解除 <a class="footnote-reference" href="#fn5" id="id23">[5]</a></td>
+</tr>
+<tr class="row-odd"><td>終了時処理</td>
+<td>解除する</td>
+<td>全解除する</td>
+<td>許可する</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id24">
+<h3>カーネル管理の割込みハンドラ<a class="headerlink" href="#id24" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="19%" />
+<col width="22%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">CPU ロックフラグ</th>
+<th class="head">割込み優先度マスク</th>
+<th class="head">ディスパッチ禁止フラグ</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>実行開始条件</td>
+<td>解除</td>
+<td>自優先度より低い</td>
+<td>任意</td>
+</tr>
+<tr class="row-odd"><td>実行開始時処理</td>
+<td>そのまま</td>
+<td>自優先度に <a class="footnote-reference" href="#fn6" id="id25">[6]</a></td>
+<td>そのまま</td>
+</tr>
+<tr class="row-even"><td>リターン前</td>
+<td>原則解除 <a class="footnote-reference" href="#fn5" id="id26">[5]</a></td>
+<td>変更不可 <a class="footnote-reference" href="#fn7" id="id27">[7]</a></td>
+<td>変更不可 <a class="footnote-reference" href="#fn7" id="id28">[7]</a></td>
+</tr>
+<tr class="row-odd"><td>リターン時処理</td>
+<td>解除する</td>
+<td>元に戻す</td>
+<td>そのまま</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id29">
+<h3>割込みサービスルーチン, タイムイベントハンドラ<a class="headerlink" href="#id29" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="19%" />
+<col width="22%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">CPU ロックフラグ</th>
+<th class="head">割込み優先度マスク</th>
+<th class="head">ディスパッチ禁止フラグ</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>実行開始条件</td>
+<td>解除</td>
+<td>任意 <a class="footnote-reference" href="#fn8" id="id30">[8]</a></td>
+<td>任意</td>
+</tr>
+<tr class="row-odd"><td>実行開始時処理</td>
+<td>そのまま</td>
+<td>そのまま <a class="footnote-reference" href="#fn8" id="id31">[8]</a></td>
+<td>そのまま</td>
+</tr>
+<tr class="row-even"><td>リターン前</td>
+<td>原則解除 <a class="footnote-reference" href="#fn5" id="id32">[5]</a></td>
+<td>変更不可 <a class="footnote-reference" href="#fn7" id="id33">[7]</a></td>
+<td>変更不可 <a class="footnote-reference" href="#fn7" id="id34">[7]</a></td>
+</tr>
+<tr class="row-odd"><td>リターン時処理</td>
+<td>解除する</td>
+<td>そのまま <a class="footnote-reference" href="#fn8" id="id35">[8]</a></td>
+<td>そのまま</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cpu">
+<h3>CPU 例外ハンドラ<a class="headerlink" href="#cpu" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="20%" />
+<col width="21%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">CPU ロックフラグ</th>
+<th class="head">割込み優先度マスク</th>
+<th class="head">ディスパッチ禁止フラグ</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>実行開始条件</td>
+<td>任意</td>
+<td>任意</td>
+<td>任意</td>
+</tr>
+<tr class="row-odd"><td>実行開始時処理</td>
+<td>そのまま</td>
+<td>そのまま</td>
+<td>そのまま</td>
+</tr>
+<tr class="row-even"><td>リターン前</td>
+<td>任意</td>
+<td>任意</td>
+<td>任意</td>
+</tr>
+<tr class="row-odd"><td>リターン時処理</td>
+<td>元に戻す</td>
+<td>元に戻す</td>
+<td>そのまま</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id36">
+<h3>拡張サービスコール<a class="headerlink" href="#id36" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="19%" />
+<col width="22%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">CPU ロックフラグ</th>
+<th class="head">割込み優先度マスク</th>
+<th class="head">ディスパッチ禁止フラグ</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>実行開始条件</td>
+<td>任意</td>
+<td>任意</td>
+<td>任意</td>
+</tr>
+<tr class="row-odd"><td>実行開始時処理</td>
+<td>そのまま</td>
+<td>そのまま</td>
+<td>そのまま</td>
+</tr>
+<tr class="row-even"><td>リターン前</td>
+<td>任意</td>
+<td>任意</td>
+<td>任意</td>
+</tr>
+<tr class="row-odd"><td>リターン時処理</td>
+<td>そのまま</td>
+<td>そのまま</td>
+<td>そのまま</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">脚注</p>
+<table class="docutils footnote" frame="void" id="fn1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[1]</a></td><td>マルチプロセッサ対応カーネルのみ</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="fn2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[2]</a></td><td>CPU 例外ハンドラからのみ</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="fn3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id12">1</a>, <a class="fn-backref" href="#id13">2</a>)</em> 保護機能対応カーネルのみ</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="fn4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[4]</a></td><td>カーネル管理外の CPU 例外ハンドラからのみ</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="fn5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td><em>(<a class="fn-backref" href="#id21">1</a>, <a class="fn-backref" href="#id22">2</a>, <a class="fn-backref" href="#id23">3</a>, <a class="fn-backref" href="#id26">4</a>, <a class="fn-backref" href="#id32">5</a>)</em> アプリケーションが設定するのが原則だが、してもしなくてもカーネルによって状態が設定される</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="fn6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[6]</a></td><td>割込みハンドラを起動した割込みの割込み優先度に変更する</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="fn7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[7]</td><td><em>(<a class="fn-backref" href="#id27">1</a>, <a class="fn-backref" href="#id28">2</a>, <a class="fn-backref" href="#id33">3</a>, <a class="fn-backref" href="#id34">4</a>)</em> その処理単位内で状態を変更するための API が提供されていない</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="fn8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id30">1</a>, <a class="fn-backref" href="#id31">2</a>, <a class="fn-backref" href="#id35">3</a>)</em> 呼び出す割込みハンドラでの状態のまま呼び出され、リターン時にも変更されない</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="process_unit_type_and_run.html">処理単位の種類と実行</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="state_transition_and_scheduling.html">タスクの状態遷移とスケジューリング規則</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

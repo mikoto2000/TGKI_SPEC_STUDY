@@ -1,0 +1,103 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>待ち行列と待ち解除の順序 &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="ディスパッチ保留状態で実行中のタスクに対する強制待ち" href="running_task_suspended_in_pend_dispatching.html" />
+    <link rel="prev" title="タスクの状態遷移とスケジューリング規則" href="state_transition_and_scheduling.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>待ち行列と待ち解除の順序</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="state_transition_and_scheduling.html">タスクの状態遷移とスケジューリング規則</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="running_task_suspended_in_pend_dispatching.html">ディスパッチ保留状態で実行中のタスクに対する強制待ち</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="id1">
+<h1>待ち行列と待ち解除の順序<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id2">
+<h2>待ち行列<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>待ち状態のタスクがつながれているキュー。
+このキューでタスクの待ち状態解除順番を管理する。</p>
+<p>待ち行列にタスクをつなぐ順番は、次の 2 種類を指定できる。</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>FIFO</dt>
+<dd><ul class="first last">
+<li>待ち状態になったタスクは待ち行列の最後につながれる</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>タスクの優先度順</dt>
+<dd><ul class="first last">
+<li>待ち状態になったタスクは、自分よりも低い優先度のタスクの前に挿入される</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="section" id="id3">
+<h3>待ち解除条件が異なるタスクがある場合<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>待ち解除条件が異なるタスクがある場合、
+「待ち行列の先頭はまだ待ち解除できないが、その後ろのタスクの待ち解除条件が満たされる」
+ということがある。</p>
+<p>その場合の共同を、次の 2 パターンから指定できる。</p>
+<ol class="loweralpha simple">
+<li>待ち解除条件を満たしたタスクの中で、待ち行列の前方にあるものから順に解除される</li>
+<li>待ち解除条件を満たしても、前方に待ち状態のタスクがある場合には待ち解除されない</li>
+</ol>
+</div>
+</div>
+<div class="section" id="index-0">
+<span id="id4"></span><h2>タスクの待ちオブジェクト<a class="headerlink" href="#index-0" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>同期・通信オブジェクトの待ち行列につながれているタスクオブジェクト。</p>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="state_transition_and_scheduling.html">タスクの状態遷移とスケジューリング規則</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="running_task_suspended_in_pend_dispatching.html">ディスパッチ保留状態で実行中のタスクに対する強制待ち</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

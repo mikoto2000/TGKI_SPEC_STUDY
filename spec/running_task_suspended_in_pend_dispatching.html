@@ -1,0 +1,86 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ディスパッチ保留状態で実行中のタスクに対する強制待ち &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="制約タスク(restricted task)" href="restricted_task.html" />
+    <link rel="prev" title="待ち行列と待ち解除の順序" href="task_queue_push_and_pop.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>ディスパッチ保留状態で実行中のタスクに対する強制待ち</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="task_queue_push_and_pop.html">待ち行列と待ち解除の順序</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="restricted_task.html">制約タスク(restricted task)</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="id1">
+<h1>ディスパッチ保留状態で実行中のタスクに対する強制待ち<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>プロセッサがディスパッチ保留状態のとき、
+実行中のタスクに強制待ち状態へ遷移させるサービスコールを発行した場合、
+次の挙動となる。</p>
+<ul class="simple">
+<li>ディスパッチ保留状態解除までタスクは実行状態のまま</li>
+<li>このとき、タスクは「強制待ち状態[実行継続中]」という状態になる</li>
+</ul>
+<p>タスクが「強制待ち状態[実行継続中]」の時の扱いは次の通り</p>
+<ul class="simple">
+<li>プロセッサを占有して実行を継続する</li>
+<li><dl class="first docutils">
+<dt>実行状態のタスクに関する情報を参照するサービスコールでは「実行状態」であるものとして扱う</dt>
+<dd><ul class="first last">
+<li>get_tid</li>
+<li>get_did</li>
+<li>sns_ter</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>その他サービスコールでは「強制待ち状態」であるものとして扱う</li>
+</ul>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="task_queue_push_and_pop.html">待ち行列と待ち解除の順序</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="restricted_task.html">制約タスク(restricted task)</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

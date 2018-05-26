@@ -1,0 +1,253 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>割込み処理モデル &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="付録" href="../appendix/index.html" />
+    <link rel="prev" title="時間パーティショニング使用時のスケジューリング規則" href="time_partitioning_and_scheduling.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>割込み処理モデル</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="time_partitioning_and_scheduling.html">時間パーティショニング使用時のスケジューリング規則</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="../appendix/index.html">付録</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="id1">
+<h1>割込み処理モデル<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="index-0">
+<span id="id2"></span><h2>割込み処理の流れ<a class="headerlink" href="#index-0" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>         |&lt;-- 割込み要求ライン --&gt;|
+デバイス -----[割込み要求]----+---&gt; 割込みコントローラ -[割込み要求]-&gt; プロセッサ -&gt; 割込みハンドラ -+-&gt; 割込みサービスルーチン
+                              |                                                                      |
+デバイス -----[割込み要求]----+                                                                      +-&gt; 割込みサービスルーチン
+</pre></div>
+</div>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">課題</p>
+<p class="last">割り込み処理モデルの図を描く</p>
+</div>
+<ol class="arabic simple">
+<li>アプリケーションが、割込みサービスルーチンを、割込み要求ラインに登録</li>
+<li>割込み要求受け付け</li>
+<li>(カーネル管理の割り込み処理の場合) 割込みハンドラの入り口処理実行</li>
+<li>割込みハンドラが、「1.」で登録された割込みサービスルーチンを実行</li>
+</ol>
+<ul class="simple">
+<li>一つの割込み要求ラインに対して複数の割込みサービスルーチンを登録できる</li>
+<li>アプリケーションが用意した割込みハンドラをカーネルに登録できる</li>
+<li><dl class="first docutils">
+<dt>カーネルが用いるタイマ(高分解能タイマ, オーバランタイマ)からの割り込み要求の場合、タイムイベント処理が行われる</dt>
+<dd><ul class="first last">
+<li>タイムアウト処理</li>
+<li>タイムイベント通知処理(タイムイベントハンドラの呼び出しを含む)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>受け付けた割り込み要求に対して、割込みサービスルーチンも割込みハンドラも登録していない場合の振る舞いはターゲット定義</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>割込み優先度<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>割り込み要求は優先順位を持つ</li>
+<li>プロセッサは、割込み優先度マスクの現在地よりも高い割込み優先度を持つ割り込み要求のみを受け付ける</li>
+<li><dl class="first docutils">
+<dt>プロセッサは、割り込み要求を受け付けると、割込み優先度マスクを「受け付けた割り込み要求の割込み優先度」に設定する</dt>
+<dd><ul class="first last">
+<li>受け付けた割り込みが NMI の場合は例外とする</li>
+<li>割込み処理からのリターン時に、割込み優先度マスクを、「割り込み要求を受け付ける前の値」に戻す</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>割り込み要求が同時に発生した場合、割込み優先度の高い割込みが先に受け付けられるとh限らない</li>
+<li>割込み優先度は <cite>-1</cite> から連続した負の整数</li>
+<li>割込み優先度の段階数はターゲット定義</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>割込み要求ラインの属性<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>各割り込み要求ラインは以下の属性を持ち、割り込み要求は、割り込み要求ラインと同一の属性となる。</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>割込み要求禁止フラグ</dt>
+<dd><ul class="first last">
+<li>割込み要求ラインの割込み要求禁止フラグがセットされている場合、その割込み要求ラインの割込み要求はマスクされる</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>割込み優先度</li>
+<li><dl class="first docutils">
+<dt>トリガモード</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>レベルトリガ</dt>
+<dd><ul class="first last">
+<li>ポジティブエッジトリガ</li>
+<li>ネガティブエッジトリガ</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>エッジトリガ</dt>
+<dd><ul class="first last">
+<li>ローレベルトリガ</li>
+<li>ハイレベルトリガ</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>割込みを受け付ける条件<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>NMI 以外の割り込み要求は、次の 4 つの条件がそろった場合に受け付けられる。</p>
+<ul class="simple">
+<li>割込み要求禁止フラグがクリア状態</li>
+<li>割込み優先度が、割込み優先度マスクの現在値よりも高い(数字が低い)</li>
+<li>全割込みロックフラグがクリア状態</li>
+<li>割込み要求がけーねる管理の割り込みである場合には、 CPU ロックフラグがクリアされている</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p class="last">条件のそろった割込み要求が複数ある場合には、その受付順序は規定しない。
+(優先度の高い割込み要求が先に受け付けられるとは限らない)</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>割込み番号と割込みハンドラ番号<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>割込み番号</dt>
+<dd><ul class="first last">
+<li>割込み要求ラインを識別するための番号</li>
+<li>ターゲット定義</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>割込みハンドラ番号</dt>
+<dd><ul class="first last">
+<li>アプリケーションが用意した割込みハンドラをカーネルに登録する際、それを識別するための番号</li>
+<li>ターゲット定義</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>割込み番号と割込みハンドラ番号は、1 対 1 になることが多い。</p>
+<p>割込み要求を行ったデバイスが、割込みベクタをプロセッサに渡すようなアーキテクチャでは、割込み番号と割込みハンドラ番号の対応をカーネルが管理しない。
+この場合、割込み番号と割込みハンドラ番号は、1 対 1 にならない。</p>
+<p>割込みサービスルーチンが登録できるのは、割込み番号と割込みハンドラ番号が 1 対 1 で対応しているもののみ。</p>
+</div>
+<div class="section" id="id7">
+<h2>マルチプロセッサにおける割り込み処理<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">課題</p>
+<p class="last">マルチプロセッサにおける割り込み処理の説明</p>
+</div>
+</div>
+<div class="section" id="index-3">
+<span id="id8"></span><h2>カーネル管理外の割り込み<a class="headerlink" href="#index-3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>高い割込み応答性を求められるアプリケーションのために、ある割込み優先度(<cite>TMIN_INTPRI</cite>)よりも高い割込み優先度を持つ割込みはマスクしないこととしている。</p>
+<ul class="simple">
+<li><cite>TMIN_INTPRI</cite> よりも高い割込み優先度を持つ割込みを、「カーネル管理外の割込み」と呼ぶ</li>
+<li>「カーネル管理外の割込み」から起動される割込みハンドラを「カーネル管理外の割込みハンドラ」と呼ぶ</li>
+</ul>
+<p>カーネル管理外の割込みハンドラは、カーネル内の割込み入り口処理を経由せずに実行するのが基本。
+(プロセッサの割込みの仕組み的に不可能な場合はある)</p>
+<p>カーネル管理外の割込みハンドラが実行開始されるとき、下記のものはターゲット定義となる。</p>
+<ul class="simple">
+<li>システム状態</li>
+<li>コンテキスト</li>
+<li>割込みハンドラ終了時の処理</li>
+<li>割込みハンドラの記述方法</li>
+</ul>
+<p>カーネル管理外の割込みハンドラから呼び出せるサービスコールは次の通り。</p>
+<ul class="simple">
+<li>システムインタフェースレイヤの API</li>
+<li>sns_ker</li>
+<li>ext_ker</li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>カーネル管理外の割込みの設定方法<a class="headerlink" href="#id9" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>基本的にターゲット定義。大体以下のいづれかが採用される。</p>
+<div class="section" id="id10">
+<h3>カーネル構築時にカーネル管理外とする割込みを決める<a class="headerlink" href="#id10" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>次のような場合はこっち。</p>
+<ul class="simple">
+<li>NIM 以外にカーネル管理外の割込みを設けない</li>
+<li>カーネル構築時に特定の割込みをカーネル管理外にすると決める</li>
+</ul>
+<p>以下はターゲット定義。</p>
+<ul class="simple">
+<li>カーネルの API で割込みハンドラを登録できるか</li>
+<li>割込み要求ラインの属性を設定できるか</li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h3>カーネル管理外とする割込みをアプリケーションで設定できるようにする<a class="headerlink" href="#id11" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>割込みハンドラおよび、割込み要求ラインに、次の属性設定を行うことで、カーネル管理外の割込みを設定できる。</p>
+<ul class="simple">
+<li>割込みハンドラ属性に <cite>TA_NONKERNEL</cite> を指定</li>
+<li>割込み要求ラインの割込み優先度を <cite>TMIN_INTPRI</cite> よりも高い値とする</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="time_partitioning_and_scheduling.html">時間パーティショニング使用時のスケジューリング規則</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="../appendix/index.html">付録</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

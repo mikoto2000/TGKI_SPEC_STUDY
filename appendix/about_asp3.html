@@ -1,0 +1,120 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ASP3 とは &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="プロファイルと機能の対応表" href="profile_and_function.html" />
+    <link rel="prev" title="付録" href="index.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>ASP3 とは</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">付録</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="profile_and_function.html">プロファイルと機能の対応表</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="asp3">
+<h1>ASP3 とは<a class="headerlink" href="#asp3" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>Advanced Standard Profile 3。
+μITRON4.0 仕様スタンダードプロファイルに準拠したリアルタイムカーネル。
+TOPPERS 第三世代カーネルの基盤として開発された。</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.toppers.jp/asp3-kernel.html">TOPPERSプロジェクト／ASP3</a></li>
+<li><a class="reference external" href="https://www.toppers.jp/documents.html#tgki_spec">TOPPERSプロジェクト／ドキュメント</a></li>
+</ul>
+<div class="section" id="id1">
+<h2>主な適用対象<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>下記項目が求められる組込みシステム。</p>
+<ul class="simple">
+<li>信頼性</li>
+<li>安全性</li>
+<li>リアルタイム性</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>システムのサイズについて<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>数十 KB から 1MB 程度のシステム
+これより大きなサイズの場合には、保護機能を持ったカーネルを推奨する。</p>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p class="last">HRP3 のことか？</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>特徴<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>基本的に動的なメモリ管理をしない</dt>
+<dd><ul class="first last">
+<li>ただし、アプリケーションが動的メモリ管理をしたい場合のために、固定長メモリプール機能をサポート</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>拡張パッケージが用意されている</dt>
+<dd><ul class="first last">
+<li>ドリフト調整機能拡張パッケージ</li>
+<li>メッセージバッファ機能拡張パッケージ</li>
+<li>オーバランハンドラ機能拡張パッケージ</li>
+<li>タスク優先度拡張パッケージ</li>
+<li>制約タスク拡張パッケージ</li>
+<li>サブ優先度機能拡張パッケージ</li>
+<li>動的生成機能拡張パッケージ</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p class="last">「動的なメモリ確保をしない」というのは ASP3 の特徴？基本的に RTOS は全部こうなのだろうか？</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">付録</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="profile_and_function.html">プロファイルと機能の対応表</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

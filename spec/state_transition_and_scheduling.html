@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>タスクの状態遷移とスケジューリング規則 &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="待ち行列と待ち解除の順序" href="task_queue_push_and_pop.html" />
+    <link rel="prev" title="システム状態とコンテキスト" href="system_status_and_context.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>タスクの状態遷移とスケジューリング規則</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="system_status_and_context.html">システム状態とコンテキスト</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="task_queue_push_and_pop.html">待ち行列と待ち解除の順序</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="id1">
+<h1>タスクの状態遷移とスケジューリング規則<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id2">
+<h2>基本的なタスク状態<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">状態</th>
+<th class="head">説明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>実行できる状態
+(runnable)</td>
+<td>タスクを実行できる条件がそろった状態</td>
+</tr>
+<tr class="row-odd"><td>実行状態
+(running)</td>
+<td>タスクが実行されている状態</td>
+</tr>
+<tr class="row-even"><td>実行可能状態
+(ready)</td>
+<td>タスクが実行できる状態にあるが、
+それよりも優先運委の高いタスクが実行状態にあるため
+まだ実行されていない状態</td>
+</tr>
+<tr class="row-odd"><td>休止状態
+(dormant)</td>
+<td>タスクが実行すべき処理が無い状態</td>
+</tr>
+<tr class="row-even"><td>広義の待ち状態
+(blocked)</td>
+<td>タスクが処理の途中で実行を止められている状態</td>
+</tr>
+<tr class="row-odd"><td>狭義の待ち状態
+(waiting)</td>
+<td>実行可能な条件がそろうのを待つために
+実行を止めている状態</td>
+</tr>
+<tr class="row-even"><td>強制待ち状態
+(suspended)</td>
+<td>他のタスクによって強制的に実行を止められている状態</td>
+</tr>
+<tr class="row-odd"><td>二重待ち状態
+(waiting-suspended)</td>
+<td>狭義の待ち状態と強制待ち状態が重なった状態</td>
+</tr>
+<tr class="row-even"><td>未登録状態
+(non-existent)</td>
+<td>タスクをカーネルに登録していないという仮想的な状態
+タスク生成前・削除後</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">課題</p>
+<p class="last">状態遷移図入れたい</p>
+</div>
+<div class="section" id="asp3">
+<h3>ASP3 カーネルにおける規定<a class="headerlink" href="#asp3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>タスク未登録状態になることはない</li>
+<li>前述のタスク状態以外の過渡的な状態になることはない</li>
+<li>動的生成機能拡張パッケージでは、タスク未登録状態になる</li>
+</ul>
+</div>
+<div class="section" id="hrp3">
+<h3>HRP3 カーネルにおける規定<a class="headerlink" href="#hrp3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">課題</p>
+<p class="last">タスクの状態遷移の HRP3 カーネルにおける規定の説明</p>
+</div>
+</div>
+<div class="section" id="fmp3">
+<h3>FMP3 カーネルにおける規定<a class="headerlink" href="#fmp3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">課題</p>
+<p class="last">タスクの状態遷移の FMP3 カーネルにおける規定の説明</p>
+</div>
+</div>
+<div class="section" id="ssp3">
+<h3>SSP3 カーネルにおける規定<a class="headerlink" href="#ssp3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">課題</p>
+<p class="last">タスクの状態遷移の SSP3 カーネルにおける規定の説明</p>
+</div>
+</div>
+</div>
+<div class="section" id="index-4">
+<span id="id3"></span><h2>タスクの状態遷移<a class="headerlink" href="#index-4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>タスクの状態遷移
+
+未登録状態 -[create]-&gt; 休止状態
+休止状態 -[delete]-&gt; 未登録状態
+
+休止状態 -[activate]-&gt; 実行可能状態
+実行できる状態 -[terminate]-&gt; 休止状態
+
+実行可能状態 -[ディスパッチ]-&gt; 実行状態
+実行状態 -[プリエンプト]-&gt; 実行可能状態
+
+二重待ち状態 -[待ち解除]-&gt; 強制待ち状態
+待ち状態 -[待ち解除]-&gt; 実行可能状態
+</pre></div>
+</div>
+<div class="admonition-todo admonition" id="index-5">
+<p class="first admonition-title">課題</p>
+<p class="last">待ち状態への遷移の整理</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>タスクのスケジューリング規則<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="index-6">
+<span id="id5"></span><h3>基本<a class="headerlink" href="#index-6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>実行できるタスクは、優先順位の高いものから順に実行される</li>
+<li><dl class="first docutils">
+<dt>タスクの優先順位は、タスクの優先度とタスクが実行できる状態になった順序から定まる</dt>
+<dd><ul class="first last">
+<li>優先度の高いタスクが高い優先順位を持つ</li>
+<li><dl class="first docutils">
+<dt>優先度が同一の場合は先に実行できる状態になったタスクが高い優先順位を持つ</dt>
+<dd><ul class="first last">
+<li>サブ優先度などの別規定がある場合はそれにしたがう</li>
+<li>サービスコール呼び出しにより、同じ優先度のタスク間の優先順位を変更することも可能</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>保護機能対応カーネル<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-7">
+<p class="first admonition-title">課題</p>
+<p class="last">保護機能対応カーネルのタスク優先順位の説明</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>サブ優先度機能をサポートするカーネル<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>同一優先度だった場合にはサブ優先度の高い方が優先順位が高くなる</li>
+<li>サブ優先度も同一の場合、先に実行できる状態になたタスクが高い優先順位を持つ</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="system_status_and_context.html">システム状態とコンテキスト</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="task_queue_push_and_pop.html">待ち行列と待ち解除の順序</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

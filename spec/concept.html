@@ -1,0 +1,237 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>主な概念 &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="処理単位の種類と実行" href="process_unit_type_and_run.html" />
+    <link rel="prev" title="API の構成要素と規則" href="api.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>主な概念</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="api.html">API の構成要素と規則</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="process_unit_type_and_run.html">処理単位の種類と実行</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="id1">
+<h1>主な概念<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id2">
+<h2>オブジェクトと処理単位<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id3">
+<h3>オブジェクト<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>カーネル、システムサービスが管理対象とするソフトウェア資源。
+特に、カーネルが管理対象とするものをカーネルオブジェクトと呼ぶ。</p>
+</div>
+<div class="section" id="id4">
+<h3>処理単位<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>オブジェクトのうち、プログラムへ対応付けされているもの。
+また、対応付けられたプログラム自体。</p>
+</div>
+<div class="section" id="id5">
+<h3>タスク<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>処理単位の一つ。
+プログラムの並行実行の単位。</p>
+</div>
+<div class="section" id="id6">
+<h3>ディスパッチ<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>実行するタスクを切り替えること。
+タスクディスパッチとも呼ぶ。</p>
+</div>
+<div class="section" id="id7">
+<h3>スケジューリング<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>次に実行すべきタスクを決定する処理。
+タスクスケジューリング友呼ぶ。</p>
+</div>
+<div class="section" id="id8">
+<h3>割込み<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>外部割込みと CPU 例外がある。</p>
+<div class="section" id="id9">
+<h4>外部割込み<a class="headerlink" href="#id9" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>実行中の処理とは独立に発生するイベントによって起動される例外処理のこと。</p>
+</div>
+<div class="section" id="cpu">
+<h4>CPU 例外<a class="headerlink" href="#cpu" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>プロセッサが実行中の処理に依存して起動される例外処理</p>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>タイムイベント通知<a class="headerlink" href="#id10" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="section" id="id11">
+<h4>タイムイベント<a class="headerlink" href="#id11" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>時間の経過をきっかけに発生するイベント。</p>
+</div>
+<div class="section" id="id12">
+<h4>タイムイベント通知<a class="headerlink" href="#id12" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>タイムイベントをアプリケーションに通知するための機能。</p>
+</div>
+<div class="section" id="id13">
+<h4>タイムイベントハンドラ<a class="headerlink" href="#id13" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>タイムイベントにより起動され、カーネルが実行制御する処理単位。</p>
+</div>
+</div>
+</div>
+<div class="section" id="id14">
+<h2>サービスコールとパラメータ<a class="headerlink" href="#id14" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id15">
+<h3>優先順位<a class="headerlink" href="#id15" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>処理単位の実行順序を決めるための概念。
+複数の処理単位が実行できる場合には、最も優先順位の高い処理単位が実行される。</p>
+</div>
+<div class="section" id="id16">
+<h3>優先度<a class="headerlink" href="#id16" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>処理単位の優先順位や、でーたなどの配送順序を決めるために与えられる値。
+値が小さいほど優先順位が高いものとする。</p>
+</div>
+<div class="section" id="id17">
+<h3>サブ優先度<a class="headerlink" href="#id17" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>優先度が同一のタスク勘の優先順位を決定するために与えられる値。</p>
+</div>
+<div class="section" id="id18">
+<h3>システムの時刻と相対時間<a class="headerlink" href="#id18" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="section" id="id19">
+<h4>システム時刻<a class="headerlink" href="#id19" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>カーネルが管理する時刻。
+単位はマイクロ秒。</p>
+</div>
+<div class="section" id="id20">
+<h4>相対時間<a class="headerlink" href="#id20" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>タイムイベントを発生させる時刻を指定する際に用いられる時間。
+基準時刻からの時間。
+単位はマイクロ秒。</p>
+</div>
+<div class="section" id="id21">
+<h4>基準時刻<a class="headerlink" href="#id21" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>相対時間を指定するサービスコールを呼び出した時刻。
+(ドキュメントに定義が記載されている場合はその説明に準じる)</p>
+</div>
+</div>
+<div class="section" id="id22">
+<h3>タイムアウトとポーリング<a class="headerlink" href="#id22" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="section" id="id23">
+<h4>タイムアウト<a class="headerlink" href="#id23" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>サービスコール内で待ち状態となった時間が、指定した時間以上となった場合に、
+サービスコールの処理を取りやめてリターンすること。</p>
+</div>
+<div class="section" id="id24">
+<h4>ポーリングを行うサービスコール<a class="headerlink" href="#id24" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>サービスコール内で待ち状態に入らないサービスコール。
+待ち状態に入るべき状況になった時点で、サービスコールの処理を取りやめてリターンする。</p>
+</div>
+</div>
+<div class="section" id="id25">
+<h3>ノンブロッキングサービスコール<a class="headerlink" href="#id25" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>処理を継続したままリターンするサービスコール。
+処理結果は、別途、何らかの方法で通知する。
+(コールバックで通知されることが多い)</p>
+</div>
+<div class="section" id="id26">
+<h3>プロセッサ時間<a class="headerlink" href="#id26" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>プロセッサが処理単位の実行に要した時間。
+単位はマイクロ秒。精度は実装依存。</p>
+</div>
+</div>
+<div class="section" id="id27">
+<h2>保護機能<a class="headerlink" href="#id27" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>この節の内容は、保護機能対応カーネルにのみ適用される。</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">課題</p>
+<p class="last">保護機能についての説明。</p>
+</div>
+</div>
+<div class="section" id="id28">
+<h2>時間パーティショニング<a class="headerlink" href="#id28" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>この節の内容は、保護機能対応カーネルにのみ適用される。</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">課題</p>
+<p class="last">時間パーティショニングについての説明。</p>
+</div>
+</div>
+<div class="section" id="id29">
+<h2>マルチプロセッサ対応<a class="headerlink" href="#id29" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>この節の内容は、マルチプロセッサ対応カーネルにのみ適用される。</p>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">課題</p>
+<p class="last">マルチプロセッサ対応についての説明。</p>
+</div>
+</div>
+<div class="section" id="id30">
+<h2>その他<a class="headerlink" href="#id30" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id31">
+<h3>オブジェクトモジュール<a class="headerlink" href="#id31" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>プログラムのオブジェクトコードとデータを含むファイル。
+(例：オブジェクトファイル・ライブラリ)</p>
+</div>
+<div class="section" id="id32">
+<h3>メモリリージョン<a class="headerlink" href="#id32" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>オブジェクトモジュールに含まれるセクションの、同じ性質を持った連続したメモリ領域。</p>
+</div>
+<div class="section" id="id33">
+<h3>標準のセクション<a class="headerlink" href="#id33" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>コンパイラに特別な指定をしない場合に出力されるセクション。</p>
+</div>
+<div class="section" id="id34">
+<h3>保護ドメインごとの標準セクション<a class="headerlink" href="#id34" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">課題</p>
+<p class="last">保護ドメインごとの標準セクションについての説明。</p>
+</div>
+</div>
+<div class="section" id="id35">
+<h3>自動メモリ配置と手動メモリ配置<a class="headerlink" href="#id35" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="section" id="id36">
+<h4>自動メモリ配置<a class="headerlink" href="#id36" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>セクション情報・リンカスクリプトを、コンフィギュレータが生成する配置方法 |</p>
+</div>
+<div class="section" id="id37">
+<h4>手動メモリ配置<a class="headerlink" href="#id37" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>セクション情報・リンカスクリプトを、アプリケーションで用意する配置方法。&lt;br /&gt;サポート有無はターゲット依存 |</p>
+</div>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="api.html">API の構成要素と規則</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="process_unit_type_and_run.html">処理単位の種類と実行</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>
