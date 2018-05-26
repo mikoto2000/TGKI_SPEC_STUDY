@@ -29,7 +29,7 @@ jobs:
           command: rm -rf ${CIRCLE_PROJECT_REPONAME}/*
       - run:
           name: Copy build results
-          command: cp -rf work/build/html/* ${CIRCLE_PROJECT_REPONAME}
+          command: cp -rf work/build/html/* work/build/html/.nojekyll work/build/html/.buildinfo ${CIRCLE_PROJECT_REPONAME}
       - run:
           name: Setup git
           command: cd ${CIRCLE_PROJECT_REPONAME};git config --local user.name "${GIT_USER_NAME}"; git config --local user.email "${GIT_EMAIL_ADDRESS}"
