@@ -1,0 +1,137 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CPU 例外処理モデル &#8212; TOPPERS 第 3 世代カーネル勉強資料</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="付録" href="../appendix/index.html" />
+    <link rel="prev" title="割込み処理モデル" href="interrupt.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>TOPPERS 第 3 世代カーネル勉強資料</span></a></h1>
+        <h2 class="heading"><span>CPU 例外処理モデル</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="interrupt.html">割込み処理モデル</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="../appendix/index.html">付録</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="cpu">
+<h1>CPU 例外処理モデル<a class="headerlink" href="#cpu" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>CPU 例外処理モデルは、ターゲットハードウェアに依存せずに決められる範囲で規定する。</p>
+<div class="section" id="id1">
+<h2>CPU 例外処理の流れ<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[CPU 例外] -+-&gt; プロセッサ -+-&gt; CPU 例外ハンドラ
+            |               |
+[CPU 例外] -+               +-&gt; CPU 例外ハンドラ
+</pre></div>
+</div>
+<ul class="simple">
+<li>CPU 例外の種類ごとに、 CPU 例外ハンドラを登録できる</li>
+<li>プロセッサが CPU 例外を検出すると、カーネル内の CPU 例外ハンドラの入り口処理を経由して CPU 例外ハンドラが呼び出される</li>
+</ul>
+<div class="section" id="id2">
+<h3>CPU の状態リカバリ処理<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>CPU 例外ハンドラ処理においては、 CPU 例外が発生した状態からのリカバリ処理を行う。</p>
+<p>リカバリ処理には、大きく次の 3 つの方法がある。</p>
+<ol class="loweralpha simple">
+<li>カーネルに依存しない形で CPU 例外の原因を取り除き、実行を継続する</li>
+<li>CPU 例外を起こしたタスクよりも高優先度のタスクを起動(or 待ち解除)し、そのタスクでリカバリ処理を行う</li>
+<li>システム全体に対してリカバリ処理を行う(ex: システム再起動)</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>CPU 例外ハンドラから呼び出せるサービスコール<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>サービスコール <cite>xsns_dpn</cite> <a class="footnote-reference" href="#fn1" id="id4">[1]</a> が返却する値によって、呼び出し可能なサービスコールが異なる。</p>
+<div class="section" id="xsns-dpn-false">
+<h3><cite>xsns_dpn</cite> が <cite>false</cite> を返却する場合<a class="headerlink" href="#xsns-dpn-false" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>非タスクコンテキストから呼び出せる、すべてのサービスコールを呼び出せる。</p>
+<p>(「a.」および「b.」, 「c.」のリカバリ方法が可能)</p>
+</div>
+<div class="section" id="xsns-dpn-true">
+<h3><cite>xsns_dpn</cite> が <cite>true</cite> を返却する場合<a class="headerlink" href="#xsns-dpn-true" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>下記サービスコールのみ呼び出せる。</p>
+<ul class="simple">
+<li>システムインタフェースレイヤの API</li>
+<li>sns_ker</li>
+<li>ext_ker</li>
+</ul>
+<p>(「a.」および「c.」のリカバリ方法が可能)</p>
+<table class="docutils footnote" frame="void" id="fn1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[1]</a></td><td>CPU 例外発生時のディスパッチ保留状態であるかを返す。(true: ディスパッチ保留状態, false: ディスパッチ保留状態でない)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>エミュレートされた CPU 例外ハンドラ<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>カーネルが検出したエラーを、 CPU 例外と同等に扱うことができる。</p>
+<p>前述のエラーをカーネルが検出した場合、アプリケーションが登録したエラー処理をカーネルが呼び出せる。</p>
+<p>エミュレートされた CPU 例外ハンドラに対しても、 CPU 例外ハンドラ番号が付与され、CPU ハンドラと同じ方法で登録できる。</p>
+</div>
+<div class="section" id="id6">
+<h2>カーネル管理外の CPU 例外<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>下記状態のいずれかで発生した例外を「カーネル管理外の CPU 例外」と呼び、
+そこから起動される CPU 例外ハンドラを「カーネル管理外の CPU 例外ハンドラ」と呼ぶ。</p>
+<ul class="simple">
+<li>カーネル非動作状態</li>
+<li>カーネル内のクリティカルセクションの実行中</li>
+<li>全割込みロック状態</li>
+<li>カーネル管理外の割込みハンドラ実行中</li>
+</ul>
+<p>「カーネル管理外の CPU 例外ハンドラ」実行中に発生した CPU 例外も、「カーネル管理外の CPU 例外」とする。</p>
+<p>「カーネル管理外の CPU 例外」でない CPU 例外を「カーネル管理の CPU 例外」と呼び、
+「カーネル管理の CPU 例外」から起動される CPU 例外を、「カーネル管理の CPU 例外ハンドラ」と呼ぶ。</p>
+<p>カーネル管理外の CPU 例外ハンドラにおいては、 <cite>xsns_dpn</cite> は <cite>true</cite> を返す。</p>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p class="last">CPU 例外は、「CPU 例外が発生する状況」によって、管理内か管理外か判断されることに注意。</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="interrupt.html">割込み処理モデル</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">コンテンツ</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="../appendix/index.html">付録</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, mikoto2000.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4 で生成しました。
+    </div>
+  </body>
+</html>

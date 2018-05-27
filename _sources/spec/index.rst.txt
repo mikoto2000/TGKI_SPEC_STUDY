@@ -16,4 +16,5 @@
    restricted_task.rst
    time_partitioning_and_scheduling.rst
    interrupt.rst
+   exception_processing_model.rst
 
